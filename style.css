@@ -3911,3 +3911,461 @@
 
 
 
+.footer-premium {
+    background-color: #000;
+    color: #fff;
+    padding: 80px 5% 40px 5%;
+    border-top: 1px solid #1a1a1a;
+    margin-top: 100px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-logo {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+}
+
+.footer-logo span { color: #555; }
+
+.footer-description {
+    font-size: 14px;
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+.footer-contact-info p {
+    font-size: 13px;
+    margin-bottom: 10px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.footer-column h3 {
+    font-size: 14px;
+    letter-spacing: 3px;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: #fff;
+    position: relative;
+}
+
+.footer-links {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.footer-links li a {
+    color: #666;
+    text-decoration: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+
+.footer-links li a:hover {
+    color: #fff;
+}
+
+.selos-confianca {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.selo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #0a0a0a;
+    padding: 12px;
+    border: 1px solid #151515;
+    transition: 0.3s;
+}
+
+.selo-item:hover { border-color: #333; }
+
+.selo-item img {
+    width: 20px;
+    filter: brightness(0) invert(1);
+}
+
+.selo-item span {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+/* AQUI ESTÁ O AJUSTE QUE VOCÊ PEDIU: TUDO EM UMA LINHA SÓ */
+.footer-bottom-alinhado {
+    display: flex;
+    justify-content: space-between; /* Texto de um lado, Cartões do outro */
+    align-items: center;
+    max-width: 1200px;
+    margin: 80px auto 0 auto;
+    padding-top: 30px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.metodos-pagamento {
+    display: flex;
+    gap: 20px;
+    filter: grayscale(1);
+    opacity: 0.5;
+}
+
+.metodos-pagamento img { height: 20px; }
+
+.footer-bottom-alinhado p {
+    font-size: 10px;
+    color: #444;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .footer-links { grid-template-columns: 1fr; }
+    .footer-container { text-align: center; }
+    .selo-item { justify-content: center; }
+    .footer-contact-info p { justify-content: center; }
+    /* No celular, empilha um em cima do outro pra não bugar */
+    .footer-bottom-alinhado { 
+        flex-direction: column-reverse; 
+        gap: 20px; 
+    }
+}
+
+/* Container Principal - Garante que ele preenche toda a largura */
+.banner-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+}
+
+/* Moldura do Slider - ZERAMOS A BORDA BRANCA AQUI */
+.banner-moldura.slider-wrapper {
+    position: relative;
+    width: 95%;            /* Deixei 95% para não colar nas bordas da tela */
+    margin: 20px auto;     /* Centraliza o banner e dá espaço em cima/baixo */
+    display: flex;
+    align-items: center;
+    background: transparent;
+    
+    /* CONFIGURAÇÃO DA BORDA E CANTO */
+    border: 1px solid rgba(255, 255, 255, 0.2) !important; /* Borda fina e elegante */
+    border-radius: 20px !important;    /* Arredonda os cantos do slider */
+    padding: 10px !important;          /* Espaço entre a borda e a imagem */
+    overflow: hidden;                  /* Garante que a imagem respeite o arredondado */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Sombra para dar profundidade */
+}
+
+.slider-header {
+    display: flex;
+    width: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.banner-item {
+    min-width: 100%;
+    height: 500px; /* Altura fixa no PC para manter o estilo quadradão */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.img-zoom-suave {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* No PC ele preenche o quadradão */
+    display: block;
+    animation: respirarBanner 8s infinite alternate ease-in-out;
+}
+
+@keyframes respirarBanner {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+}
+
+/* SETAS DO SLIDER (Mantive o estilo discreto) */
+.slider-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.3);
+    color: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+}
+
+.slider-btn:hover { background: rgba(0, 0, 0, 0.8); }
+.prev { left: 20px; }
+.next { right: 20px; }
+
+/* Pontinhos indicadores */
+.slider-dots {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transition: 0.3s;
+}
+
+.dot.active {
+    background: #fff;
+    width: 15px;
+    border-radius: 10px;
+}
+
+/* Ajuste para Mobile */
+@media (max-width: 768px) {
+    .slider-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+}
+
+/* Ajuste Geral para o Quadradão */
+.banner-item {
+    min-width: 100%;
+    height: 500px; /* Altura fixa no PC para manter o estilo quadradão */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-zoom-suave {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* No PC ele preenche o quadradão */
+    display: block;
+    animation: respirarBanner 8s infinite alternate ease-in-out;
+}
+
+/* --- O PULO DO GATO PARA O CELULAR --- */
+@media (max-width: 768px) {
+    .banner-item {
+        height: auto; /* No celular, ele não força mais a altura de 500px */
+    }
+
+    .img-zoom-suave {
+        height: auto; /* A foto se ajusta sozinha ao tamanho da tela */
+        object-fit: contain; /* Garante que a foto apareça inteira sem cortes */
+    }
+    
+    .banner-moldura.slider-wrapper {
+        width: 100%; /* No celular, melhor ocupar a tela toda pra foto não ficar minúscula */
+        border-radius: 0 !important; /* Tira o arredondado pra ganhar espaço se preferir */
+        padding: 0 !important;
+    }
+}
+
+/* --- Carrinho Lateral - Container Principal --- */
+.carrinho-lateral {
+    background-color: #0d0d0d !important; /* Fundo cinza quase preto */
+    border-left: 1px solid #1a1a1a;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.6);
+    padding: 25px !important;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Título do Carrinho */
+.carrinho-lateral h2 {
+    color: #fff;
+    font-size: 19px;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+/* Botão de Fechar (&times;) */
+.carrinho-lateral h2 + button {
+    color: #888 !important; /* Cinza para não chamar muita atenção */
+    transition: color 0.3s;
+}
+
+.carrinho-lateral h2 + button:hover {
+    color: #fff !important; /* Branco no hover */
+}
+
+/* Container que segura os itens (com scroll) */
+#conteudoCarrinho {
+    max-height: calc(100vh - 250px); /* Ajusta altura conforme o rodapé */
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-top: 10px;
+}
+
+/* Customizando a barra de scroll do carrinho */
+#conteudoCarrinho::-webkit-scrollbar {
+    width: 4px;
+}
+#conteudoCarrinho::-webkit-scrollbar-track {
+    background: #0d0d0d;
+}
+#conteudoCarrinho::-webkit-scrollbar-thumb {
+    background: #262626; /* Cinza escuro */
+    border-radius: 10px;
+}
+
+/* --- Cada item do produto no carrinho --- */
+.item-carrinho {
+    display: flex;
+    align-items: center;
+    background: #141414; /* Cinza ligeiramente mais claro que o fundo */
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #1f1f1f;
+    transition: all 0.3s ease-in-out;
+}
+
+/* --- HOVER NO ITEM (Cinza mais escurinho conforme pedido) --- */
+.item-carrinho:hover {
+    background-color: #080808; /* Um cinza ainda mais escuro */
+    border-color: #333; /* Borda levemente mais clara para destacar */
+    transform: translateX(3px); /* Leve movimento para a direita */
+}
+
+/* Foto do produto */
+.item-carrinho img {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-right: 15px;
+    background: #1a1a1a;
+    border: 1px solid #262626;
+}
+
+/* Detalhes (Nome, Preço e Tamanho) */
+.item-detalhes {
+    flex-grow: 1;
+}
+
+.item-detalhes h4 {
+    color: #eee; /* Branco sujo para o nome */
+    font-size: 13px;
+    margin: 0 0 4px 0;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.item-detalhes p {
+    color: #fff; /* Branco puro para o preço destacar */
+    font-weight: 700;
+    margin: 0;
+    font-size: 14px;
+}
+
+.item-detalhes span {
+    color: #777; /* Cinza para informações secundárias */
+    font-size: 11px;
+    display: block;
+    margin-top: 3px;
+    font-weight: 400;
+}
+
+/* Botão de lixeira */
+.btn-remover-item {
+    background: #1a1a1a;
+    color: #666; /* Cinza padrão */
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.3s;
+    font-size: 20px;
+}
+
+.btn-remover-item:hover {
+    background: #b30000; /* Vermelho escuro no hover para remover */
+    color: #fff;
+}
+
+/* Rodapé do Carrinho */
+#rodapeCarrinho {
+    margin-top: auto; /* Empurra o rodapé para o final */
+    border-top: 1px solid #1f1f1f;
+    padding-top: 15px;
+    background-color: #0d0d0d;
+}
+
+/* Estilo para Subtotal e Total */
+#rodapeCarrinho div[style*="justify-content: space-between"] {
+    color: #bbb !important; /* Cinza claro para os textos */
+    font-size: 14px;
+}
+
+#totalFinal {
+    color: #fff !important; /* Branco puro para o total */
+    font-weight: 800;
+}
+
+/* Botão de finalizar compra */
+.btn-comprar-p {
+    width: 100%;
+    background: #f2f2f2; /* Cinza muito claro, quase branco */
+    color: #000;
+    padding: 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: 0.3s;
+    text-transform: uppercase;
+    margin-top: 10px;
+}
+
+.btn-comprar-p:hover {
+    background: #fff; /* Branco puro no hover */
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+}

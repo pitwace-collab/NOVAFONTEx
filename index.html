@@ -388,8 +388,10 @@
             <li class="nav-item"><a href="#" class="nav-link" onclick="openBrand('TENIS'); return false;">TENIS</a></li>
             <li class="nav-item"><a href="#" class="nav-link" onclick="openBrand('BONES'); return false;">BONES</a></li>
             <li class="nav-item"><a href="#" class="nav-link" onclick="openBrand('ROUPAS'); return false;">ROUPAS</a></li>
+            <li class="nav-item"><a href="#" class="nav-link" onclick="openBrand('BLUSAS'); return false;">BLUSAS</a></li>
             <li class="nav-item"><a href="#" class="nav-link" onclick="openBrand('CALÇAS'); return false;">CALÇAS</a></li>
             <li class="nav-item"><a href="#" class="nav-link" onclick="openBrand('SHORTS'); return false;">SHORTS</a></li>
+            
         </ul>
     </div>
 </nav>
@@ -413,6 +415,9 @@
             <div class="marca-item" onclick="openBrand('SYNA WORLD')"><img src="synaworld.jpeg"></div>
             <div class="marca-item" onclick="openBrand('CHROME HEARTS')"><img src="chrome.jpeg"></div>
             <div class="marca-item" onclick="openBrand('NOCTA')"><img src="nocta.png"></div>
+            <div class="marca-item" onclick="openBrand('HELL STAR')"><img src="HELLSTAR.jpg"></div>
+            <div class="marca-item" onclick="openBrand('SP5DER')"><img src="sp5der.jpg"></div>
+            <div class="marca-item" onclick="openBrand('TRAPSTAR')"><img src="trapstar.avif"></div>
         </div>
 
         <button class="seta-carrossel btn-mobile-only" onclick="scrollMarcas(1)">&#10095;</button>
@@ -467,10 +472,35 @@ function scrollMarcas(direcao) {
 </script>
 
     <section class="banner-container">
-        <div class="banner-moldura">
-            <img src="iniciosite1.jpeg" alt="Destaque" class="img-zoom-suave">
+    <div class="banner-moldura slider-wrapper">
+        <div class="slider-header" id="sliderHeader">
+            <div class="banner-item">
+                <img src="iniciosite1.webp" alt="Destaque 1" class="img-zoom-suave">
+            </div>
+            <div class="banner-item">
+                <img src="synaworldslide.webp" alt="Destaque 2" class="img-zoom-suave">
+            </div>
+            <div class="banner-item">
+                <img src="hellstarslide.webp" alt="Destaque 3" class="img-zoom-suave">
+            </div>
+         <div class="banner-item">
+                <img src="trapstarslide.webp" alt="Destaque 3" class="img-zoom-suave">
+            </div> 
+            <div class="banner-item">
+                <img src="denintearsslide.webp" alt="Destaque 3" class="img-zoom-suave">
+            </div>
         </div>
-    </section>
+
+        <button class="slider-btn prev" onclick="mudarSlideHeader(-1)">&#10094;</button>
+        <button class="slider-btn next" onclick="mudarSlideHeader(1)">&#10095;</button>
+
+        <div class="slider-dots" id="sliderDots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </div>
+</section>
 
     <div id="sidePanel" class="full-screen-panel">
         <div class="panel-header">
@@ -508,8 +538,8 @@ let produtosPorMarca = {
     'BONES': [], 
     'CALÇAS': [],
     'SHORTS': [],
+    'BLUSAS': [],
     'CONJUNTOS': []
-    
     
 };
 
@@ -521,18 +551,80 @@ let tamanhoSelecionado = "";
 
 document.addEventListener('DOMContentLoaded', () => {
     atualizarContador();
-    renderizarItensCarrinho();
-    criarToastHTML(); // Cria o aviso de tela automaticamente
+    renderizarItensCarrinho(); // Garante que o carrinho carrega ao abrir o site
 });
 
 function salvarCarrinho() {
     localStorage.setItem('carrinho', JSON.stringify(carrinho));
     atualizarContador();
+    renderizarItensCarrinho(); // Atualiza a lista visual toda vez que salva
 }
 
 function atualizarContador() {
     const cartCount = document.getElementById('cart-count');
-    if (cartCount) cartCount.innerText = carrinho.length;
+    if (cartCount) {
+        cartCount.innerText = carrinho.length;
+        // Só mostra a bolinha se tiver item
+        cartCount.style.display = carrinho.length > 0 ? 'flex' : 'none';
+    }
+}
+
+// ESTA É A FUNÇÃO QUE DEIXA O BAGULHO BONITO
+function renderizarItensCarrinho() {
+    const conteudo = document.getElementById('conteudoCarrinho');
+    const rodape = document.getElementById('rodapeCarrinho');
+    const subtotalElem = document.getElementById('subtotalValor');
+    const totalFinalElem = document.getElementById('totalFinal');
+
+    if (!conteudo) return;
+
+    if (carrinho.length === 0) {
+        conteudo.innerHTML = `
+            <div style="text-align:center; padding:40px; color:#555;">
+                <i class="fas fa-shopping-bag" style="font-size:30px; margin-bottom:10px;"></i>
+                <p>SEU CARRINHO ESTÁ VAZIO</p>
+            </div>`;
+        if (rodape) rodape.style.display = 'none';
+        return;
+    }
+
+    if (rodape) rodape.style.display = 'block';
+    conteudo.innerHTML = ''; 
+
+    let valorTotal = 0;
+
+    carrinho.forEach((item, index) => {
+        // Remove o "R$" e vírgulas para somar corretamente se o preço for string
+        const precoNum = typeof item.preco === 'string' 
+            ? parseFloat(item.preco.replace('R$', '').replace('.', '').replace(',', '.')) 
+            : item.preco;
+        
+        valorTotal += precoNum;
+
+        conteudo.innerHTML += `
+            <div class="item-carrinho">
+                <img src="${item.imagem}" alt="${item.nome}">
+                <div class="item-detalhes">
+                    <h4>${item.nome}</h4>
+                    <p>R$ ${precoNum.toLocaleString('pt-BR', {minimumFractionDigits: 2})}</p>
+                    <span>TAMANHO: ${item.tamanho || 'PADRÃO'}</span>
+                </div>
+                <button class="btn-remover-item" onclick="removerDoCarrinho(${index})">
+                    &times;
+                </button>
+            </div>
+        `;
+    });
+
+    // Atualiza os valores no rodapé
+    if (subtotalElem) subtotalElem.innerText = `R$ ${valorTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+    if (totalFinalElem) totalFinalElem.innerText = `R$ ${valorTotal.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
+}
+
+// Função para remover item
+function removerDoCarrinho(index) {
+    carrinho.splice(index, 1);
+    salvarCarrinho();
 }
 
 
@@ -546,6 +638,9 @@ function openBrand(brand) {
 
     const container = document.getElementById('vitrineGeneric');
     container.innerHTML = '<p style="color:#fff;padding:40px">Carregando...</p>';
+
+    // TRAVA O SCROLL DO FUNDO AO ABRIR
+    document.body.style.overflow = 'hidden';
 
     db.collection("produtos")
         .where("marca", "==", brand)
@@ -583,9 +678,9 @@ function openBrand(brand) {
                 const data = JSON.stringify(produtoData).replace(/"/g, '&quot;');
 
                 container.innerHTML += `
-                    <div class="card-soft" onclick="openProductModal(${data})" style="border-radius:15 !important;">
-                        <div class="img-container" style="border-radius:15 !important;">
-                            <img src="${imgPrincipal}" style="border-radius:15 !important; object-fit: cover;">
+                    <div class="card-soft" onclick="openProductModal(${data})" style="border-radius:15px !important;">
+                        <div class="img-container" style="border-radius:15px !important;">
+                            <img src="${imgPrincipal}" style="border-radius:15px !important; object-fit: cover;">
                         </div>
                         <span class="prod-nome" style="text-transform: uppercase;">${p.nome}</span>
                         <div style="display: flex; flex-direction: column; gap: 2px;">
@@ -720,14 +815,15 @@ function removerItem(i) {
 function openProductModal(prod) {
     const body = document.getElementById('productDetailsBody');
 
+    // TRAVA O SCROLL DO FUNDO
+    document.body.style.overflow = 'hidden';
+
     const fotos = prod.fotos || (prod.imagens ? prod.imagens : [prod.img]);
     let minis = '';
     fotos.forEach((f, i) => {
         minis += `<img src="${f}" class="mini-foto ${i === 0 ? 'active' : ''}" onclick="trocarFoto(this, '${f}')" style="border-radius:0 !important;">`;
     });
 
-    // --- NOVA LÓGICA: SEM TAMANHOS FIXOS ---
-    // Agora ele só usa o que vier do banco. Se vier vazio, a lista fica vazia.
     let listaTamanhos = (prod.tamanhos && prod.tamanhos.length > 0) ? prod.tamanhos : [];
 
     let htmlTamanhos = '';
@@ -746,7 +842,7 @@ function openProductModal(prod) {
             <div class="galeria-produto-p">
                 <div class="miniaturas-col">${minis}</div>
                 <div class="foto-principal-p">
-                    <img src="${prod.img || (prod.imagens ? prod.imagens[0] : '')}" id="mainImg" style="border-radius:0 !important;">
+                    <img src="${prod.img || (prod.imagens ? prod.imagens[0] : '')}" id="mainImg" style="border-radius:4 !important;">
                 </div>
             </div>
         </div>
@@ -776,7 +872,7 @@ function openProductModal(prod) {
             <button 
                 class="btn-comprar-p" 
                 onclick="adicionarAoCarrinho('${prod.nome}', '${prod.precoPix}', '${prod.img || (prod.imagens ? prod.imagens[0] : '')}')" 
-                style="border-radius:0 !important; margin-top: 20px;">
+                style="border-radius:3 !important; margin-top: 20px;">
                 COMPRAR AGORA
             </button>
 
@@ -790,20 +886,30 @@ function openProductModal(prod) {
     const msg = document.getElementById('msg-ja-adicionado');
     if (msg) msg.classList.remove('show');
 
-    // Se não tiver tamanho, define como "N/A" ou "ÚNICO" para o carrinho não bugar
     tamanhoSelecionado = listaTamanhos.length > 0 ? listaTamanhos[0] : 'ÚNICO';
 
     document.getElementById('productModal').style.display = 'block';
 }
 
-
+// FUNÇÕES AUXILIARES COM LIBERAÇÃO DE SCROLL
 function trocarFoto(el, s) { document.getElementById('mainImg').src = s; document.querySelectorAll('.mini-foto').forEach(m => m.classList.remove('active')); el.classList.add('active'); }
 function selT(btn) { document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); tamanhoSelecionado = btn.innerText; }
 function showPanel() { document.getElementById('sidePanel').classList.add('active'); document.getElementById('overlay').classList.add('active'); }
 function togglePanel() { document.getElementById('sidePanel').classList.remove('active'); document.getElementById('overlay').classList.remove('active'); }
 function toggleCarrinho() { document.getElementById('carrinhoLateral').classList.toggle('active'); document.getElementById('cartOverlay').classList.toggle('active'); }
-function closeProductModal() { document.getElementById('productModal').style.display = 'none'; }
 
+function closeProductModal() { 
+    document.getElementById('productModal').style.display = 'none'; 
+    
+    // Verifica se o painel de marcas/categorias está aberto
+    const panelMarcas = document.getElementById('full-screen-panel');
+    const panelAtivo = panelMarcas && panelMarcas.classList.contains('active');
+
+    // Só libera o scroll do fundo se o painel de marcas NÃO estiver aberto
+    if (!panelAtivo) {
+        document.body.style.overflow = 'auto';
+    }
+}
 function finalizarCompra() {
     if (carrinho.length === 0) {
         mostrarAviso("⚠️ O CARRINHO ESTÁ VAZIO", true);
@@ -887,25 +993,67 @@ function dispararBuscaManual() {
     const input = document.getElementById('mainSearch');
     const termo = input.value.toLowerCase().trim();
 
-    // Une todos os seus produtos para pesquisar
+    if (termo === "") return;
+
+    // Comando ADM
+    if (termo === "painel adm") {
+        abrirModalAdm();
+        return;
+    }
+
+    // --- A MÁGICA PRA ACHAR OS PRODUTOS ---
     let todosOsProdutos = [];
-    Object.values(produtosPorMarca).forEach(lista => { 
-        todosOsProdutos = todosOsProdutos.concat(lista); 
+
+    try {
+        // 1. Tenta pegar de produtosPorMarca
+        if (typeof produtosPorMarca !== 'undefined' && produtosPorMarca) {
+            Object.values(produtosPorMarca).forEach(lista => {
+                if (Array.isArray(lista)) todosOsProdutos = todosOsProdutos.concat(lista);
+            });
+        }
+
+        // 2. Tenta pegar dos estoques globais
+        // Usei window['nome'] para garantir que ele pegue a variável global mesmo que o script se perca
+        const estoques = ['estoqueSapatos', 'estoqueConjuntos', 'estoqueBones'];
+        estoques.forEach(nome => {
+            if (window[nome] && Array.isArray(window[nome])) {
+                todosOsProdutos = todosOsProdutos.concat(window[nome]);
+            } else if (typeof eval(nome) !== 'undefined') { // Backup caso não esteja no window
+                todosOsProdutos = todosOsProdutos.concat(eval(nome));
+            }
+        });
+    } catch (e) {
+        console.log("Aguardando carregamento dos arrays...");
+    }
+
+    // 3. FILTRO POR NOME OU MARCA (Manual e Direto)
+    const resultados = todosOsProdutos.filter(p => {
+        const nomeProd = (p.nome || "").toLowerCase();
+        const marcaProd = (p.marca || "").toLowerCase();
+        const categoriaProd = (p.categoria || "").toLowerCase();
+        
+        return nomeProd.includes(termo) || 
+               marcaProd.includes(termo) || 
+               categoriaProd.includes(termo);
     });
-    todosOsProdutos = todosOsProdutos.concat(estoqueSapatos, estoqueConjuntos, estoqueBones);
 
-    const resultados = todosOsProdutos.filter(p => p.nome.toLowerCase().includes(termo));
-
-    // Exibe os resultados no painel lateral que você já tem
+    // 4. EXIBIÇÃO
     const title = document.getElementById('panelTitle');
     const body = document.getElementById('panelBody');
+    
     title.innerText = `BUSCA: ${termo.toUpperCase()}`;
     body.innerHTML = '<div class="vitrine-fluxo" id="vitrineBusca"></div>';
 
+    const vitrine = document.getElementById('vitrineBusca');
+
     if (resultados.length > 0) {
-        renderCards(resultados, document.getElementById('vitrineBusca'));
+        renderCards(resultados, vitrine);
     } else {
-        document.getElementById('vitrineBusca').innerHTML = `<div style="text-align:center; padding:50px; color:#555;">NADA ENCONTRADO.</div>`;
+        vitrine.innerHTML = `
+            <div style="text-align:center; padding:50px; color:#888;">
+                <p>NADA ENCONTRADO PARA "${termo.toUpperCase()}"</p>
+                <p style="font-size: 12px;">Dica: Tente termos como 'Nike', 'Trapstar' ou o nome do modelo.</p>
+            </div>`;
     }
 
     if (!document.getElementById('sidePanel').classList.contains('active')) {
@@ -914,33 +1062,64 @@ function dispararBuscaManual() {
 }
 
 
-
     </script>
 
     <footer class="footer-premium">
-        <div class="footer-container">
-            <div class="footer-column">
-                <h3>NAVEGAÇÃO</h3>
-                <ul>
-                    <li><a href="#">Início</a></li>
-                    <li><a href="javascript:void(0)" onclick="openBrand('ROUPAS')">Roupas</a></li>
-                    <li><a href="javascript:void(0)" onclick="openBrand('TENIS')">Tenis</a></li>
-                    <li><a href="javascript:void(0)" onclick="openBrand('BONES')">Bonés</a></li>
-                    <li><a href="javascript:void(0)" onclick="openBrand('SHORTS')">Shorts</a></li>
-                    <li><a href="javascript:void(0)" onclick="openBrand('CALÇAS')">Calças</a></li>
-                    <li><a href="javascript:void(0)" onclick="openBrand('CONJUNTOS')">Conjuntos</a></li>
-
-                    <li><a href="#">Contato</a></li>
-                </ul>
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3 class="footer-logo">NOVA<span>FONTE</span></h3>
+            <p class="footer-description">A estética das ruas. Onde o estilo encontra a essência.</p>
+            <div class="footer-contact-info">
+                <p><i class="fab fa-whatsapp"></i> (55) 11 952163360</p>
+                <p><i class="far fa-envelope"></i> davicarlos2203@gmail.com</p>
             </div>
-            <div class="footer-column">
-                <h3>ENTRE EM CONTATO</h3>
-                <ul>
-                    <li>(55) 11 952163360</li>
-                    <li>davicarlos2203@gmail.com</li>
-                </ul>
-            </div>
+        </div>
 
+        <div class="footer-column">
+            <h3>NAVEGAÇÃO</h3>
+            <ul class="footer-links">
+                <li><a href="#">Início</a></li>
+                <li><a href="javascript:void(0)" onclick="openBrand('ROUPAS')">Roupas</a></li>
+                <li><a href="javascript:void(0)" onclick="openBrand('TENIS')">Tenis</a></li>
+                <li><a href="javascript:void(0)" onclick="openBrand('BONES')">Bonés</a></li>
+                <li><a href="javascript:void(0)" onclick="openBrand('SHORTS')">Shorts</a></li>
+                <li><a href="javascript:void(0)" onclick="openBrand('CALÇAS')">Calças</a></li>
+                <li><a href="javascript:void(0)" onclick="openBrand('TRAPSTAR')">Trapstar</a></li>
+                <li><a href="javascript:void(0)" onclick="openBrand('HELL STAR')">Hell Star</a></li>
+                <li><a href="javascript:void(0)" onclick="openBrand('SP5DER')">Sp5der</a></li>
+                <li><a href="javascript:void(0)" onclick="openBrand('CONJUNTOS')">Conjuntos</a></li>
+                <li><a href="javascript:void(0)" onclick="openBrand('BLUSAS')">Blusas</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-column">
+            <h3>SEGURANÇA</h3>
+            <div class="selos-confianca">
+                <div class="selo-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1161/1161388.png">
+                    <span>AMBIENTE 100% SEGURO</span>
+                </div>
+                <div class="selo-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/709/709790.png">
+                    <span>ENTREGA GARANTIDA</span>
+                </div>
+                <div class="selo-item">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2950/2950153.png">
+                    <span>PRODUTOS PREMIUM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom-alinhado">
+        <p>&copy; 2026 NOVA FONTE - TODOS OS DIREITOS RESERVADOS.</p>
+        <div class="metodos-pagamento">
+            <img src="https://img.icons8.com/color/48/ffffff/pix.png" alt="Pix">
+            <img src="https://img.icons8.com/color/48/ffffff/mastercard.png" alt="Mastercard">
+            <img src="https://img.icons8.com/color/48/ffffff/visa.png" alt="Visa">
+        </div>
+    </div>
+</footer>
     
 
     <div id="cartOverlay" class="cart-overlay" onclick="toggleCarrinho()"></div>
@@ -1014,8 +1193,7 @@ function renderizarListaOrdenacao() {
     });
 }
 
-// Chama ao carregar a página
-window.addEventListener('load', renderizarProdutosNoSite);
+
 
 
 
@@ -1127,6 +1305,9 @@ function renderizarListaOrdenacao() {
             <div onclick="setMarca('NOCTA', 'Nocta')">Nocta</div>
             <div onclick="setMarca('SHORTS', 'Shorts')">Shorts</div>
             <div onclick="setMarca('CALÇAS', 'Calças')">Calças</div>
+            <div onclick="setMarca('SP5DER', 'Sp5der')">SP5DER</div>
+            <div onclick="setMarca('HELL STAR', 'Hell Star')">HELL STAR</div>
+            <div onclick="setMarca('TRAPSTAR', 'Trapstar')">TRAPSTAR</div>
         </div>
       </div>
 
@@ -1147,6 +1328,17 @@ function renderizarListaOrdenacao() {
         <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">40</button>
         <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">41</button>
         <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">42</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">43</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">44</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">45</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">46</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">47</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">48</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">49</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">50</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">51</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">52</button>
+        <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">53</button>
     </div>
     <div id="gradeRoupasAdm" style="display: flex; flex-wrap: wrap;">
         <button type="button" class="t-btn-adm" onclick="this.classList.toggle('active')">P</button>
@@ -1313,9 +1505,9 @@ async function salvarAparencia() {
 
 async function aplicarAparencia() {
 
-    const snap = await getDoc(doc(db, "configuracoes", "aparencia"));
+    
 
-    if (!snap.exists()) return;
+    
 
     const dados = snap.data();
 
@@ -1449,7 +1641,7 @@ window.addEventListener('load', () => {
         const container = document.querySelector('.logo-container');
 
         if (container) {
-            aplicarLogoHeader(logoSalva);
+            aplicarAparencia(logoSalva);
             clearInterval(esperarHeader);
         }
 
@@ -2339,6 +2531,65 @@ function aplicarAparencia() {
 }
 
 window.addEventListener("load", aplicarAparencia);
+
+
+
+// --- BLOCO DE SEGURANÇA PARA PARAR OS ERROS ---
+
+// FUNÇÃO QUE ABRE O PAINEL DE MARCAS
+function showPanel() {
+    document.getElementById('sidePanel').classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+    
+    // Trava o fundo quando o painel de marcas abrir
+    document.body.style.overflow = 'hidden';
+}
+
+// FUNÇÃO QUE FECHA O PAINEL DE MARCAS (A que estava faltando!)
+function togglePanel() {
+    document.getElementById('sidePanel').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+    
+    // Libera o fundo quando fechar o painel de marcas
+    document.body.style.overflow = 'auto';
+}
+
+// FUNÇÃO QUE FECHA O MODAL DO PRODUTO (Ajustada para não travar nada)
+function closeProductModal() {
+    document.getElementById('productModal').style.display = 'none';
+
+    // Se o painel de marcas ainda estiver aberto lá atrás, mantém travado.
+    // Se o painel de marcas já estiver fechado, libera o scroll.
+    const panelMarcas = document.getElementById('sidePanel');
+    if (!panelMarcas || !panelMarcas.classList.contains('active')) {
+        document.body.style.overflow = 'auto';
+    }
+}
+
+let slideIndexHeader = 0;
+
+function mudarSlideHeader(n) {
+    const slider = document.getElementById('sliderHeader');
+    const slides = document.querySelectorAll('.banner-item');
+    const dots = document.querySelectorAll('.dot');
+    
+    slideIndexHeader += n;
+
+    if (slideIndexHeader >= slides.length) { slideIndexHeader = 0; }
+    if (slideIndexHeader < 0) { slideIndexHeader = slides.length - 1; }
+
+    // Faz o deslize
+    slider.style.transform = `translateX(${-slideIndexHeader * 100}%)`;
+
+    // Atualiza os pontinhos ativos
+    dots.forEach(dot => dot.classList.remove('active'));
+    if(dots[slideIndexHeader]) dots[slideIndexHeader].classList.add('active');
+}
+
+// Passa sozinho a cada 5 segundos
+setInterval(() => {
+    mudarSlideHeader(1);
+}, 5000);
 
 </script>
 
